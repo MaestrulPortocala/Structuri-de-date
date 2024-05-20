@@ -1,0 +1,197 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+struct Nod {
+    int info;
+    struct Nod* succ;
+};
+
+struct Nod* init(const int info) {
+    struct Nod* nod_nou = (struct Nod*)malloc(sizeof(struct Nod));
+    nod_nou->info = info;
+    nod_nou->succ = NULL;
+    return nod_nou;
+}
+
+struct Nod* inserare_inceput(struct Nod* front, const int info) {
+    if (front == NULL) {
+        front = init(info);
+    } else {
+        struct Nod* nod_nou = init(info);
+        nod_nou->succ = front;
+        front = nod_nou;
+    }
+    return front;
+}
+
+struct Nod* inserare_sfarsit(struct Nod* front, const int info) {
+    if (front == NULL) {
+        front = init(info);
+    } else {
+        struct Nod* nod_nou = init(info);
+        struct Nod* temp = front;
+        while (temp->succ != NULL) {
+            temp = temp->succ;
+        }
+        temp->succ = nod_nou;
+    }
+    return front;
+}
+
+struct Nod* inserare_interior(struct Nod* front, const int info){
+    if(front == NULL) {
+        front = init(info);
+    } else {
+        struct Nod* nod_nou = init(info);
+        struct Nod* nod_urmator=front->succ;
+        front->succ=nod_nou;
+        nod_nou->succ=nod_urmator;
+    }
+    return front;
+}
+
+struct Nod* stergere_inceput(struct Nod* front) {
+    if (front != NULL) {
+        
+        front = front->succ;
+    
+    }
+    return front;
+}
+
+
+struct Nod* stergere_sfarsit(struct Nod* front) {
+    if (front != NULL) {
+        struct Nod* tmp=front;
+        struct Nod* tmp1=front;
+        while(tmp->succ!=NULL){
+            tmp=tmp->succ;
+        }
+         while(tmp1->succ!=tmp){
+            tmp1=tmp1->succ;
+        }
+        tmp1->succ=NULL;
+    }
+    return front;
+}
+
+
+struct Nod* stergere_interior(struct Nod* front){
+    if(front!=NULL){
+       struct Nod* tmp=front->succ;
+       front->succ=tmp->succ;
+    }
+    return front;
+}
+
+
+struct Nod* distrugere(struct Nod* front) {
+    while (front != NULL) {
+        front = stergere_inceput(front);
+    }
+    return front;
+}
+
+
+int cautare(struct Nod* front, int cheie, int* i){
+    struct Nod* tmp=front;
+    while(tmp!=NULL){
+         if(cheie==tmp->info){
+            return *i;
+        }
+        else{
+        tmp=tmp->succ;
+        (*i)++;
+            
+        }
+    }
+    
+}
+
+struct Nod* actualizare(struct Nod* front, int pozitie){
+    if(front!=NULL){
+        int i=0;
+        struct Nod* tmp=front;
+        while(i!=pozitie){
+            tmp=tmp->succ;
+            i++;
+        }
+        printf("Actualizeaza valoarea\n");
+        scanf("%d", &tmp->info);
+    }
+    return front;
+}
+
+
+
+
+
+
+
+int main() {
+    struct Nod* front = NULL;
+    front = inserare_inceput(front, 3);
+    front = inserare_sfarsit(front, 5);
+    front = inserare_interior(front, 6);
+    printf("%d\n", front->info); 
+    printf("%d\n", front->succ->info); 
+    printf("%d\n", front->succ->succ->info);
+   //front=stergere_inceput(front);
+  // front=stergere_sfarsit(front);
+   //front=stergere_interior(front);
+   /*  printf("%d\n", front->info);
+      printf("%d\n", front->succ->info);
+      printf("%d\n", front->succ->succ->info);*/
+   // front = distrugere(front);  
+    int cheie=5;
+    int i=0;
+    printf("Pozitia este:\n%d\n", cautare(front, cheie, &i));
+    
+    printf("Alege pozitia:\n");
+    int pozitie;
+    scanf("%d", &pozitie);
+    front=actualizare(front, pozitie);
+    printf("Lista actualizata\n");
+    printf("%d\n", front->info); 
+    printf("%d\n", front->succ->info); 
+    printf("%d\n", front->succ->succ->info);
+    struct Nod* tmp=front;
+    struct Nod* tmp2;
+    while(tmp!=NULL){
+        tmp2=tmp->succ;
+        while(tmp2!=NULL){
+            if(tmp->info>tmp2->info){
+                int temp=tmp->info;
+                tmp->info=tmp2->info;
+                tmp2->info=temp;
+            }
+            tmp2=tmp2->succ;
+        }
+        tmp=tmp->succ;
+    }
+    printf("Lista ordonata\n");
+     printf("%d\n", front->info); 
+    printf("%d\n", front->succ->info); 
+    printf("%d\n", front->succ->succ->info);
+    printf("Maximul:\n");
+    tmp=front;
+    int max=front->info;
+    while(tmp!=NULL){
+        if(tmp->info>max){
+            max=tmp->info;
+        }
+        tmp=tmp->succ;
+    }
+    printf("%d\n", max);
+    printf("Minimul:\n");
+     tmp=front;
+    int min=front->info;
+    while(tmp!=NULL){
+        if(tmp->info<min){
+            min=tmp->info;
+        }
+        tmp=tmp->succ;
+    }
+    printf("%d\n", min);
+    return 0;
+}
